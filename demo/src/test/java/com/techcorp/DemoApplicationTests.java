@@ -1,4 +1,4 @@
-package com.aplikacje_przemyslowe_lab01.demo;
+package com.techcorp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
