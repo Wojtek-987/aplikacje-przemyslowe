@@ -1,0 +1,6 @@
+firstName,lastName,email,company,position,salary
+Jan,Kowalski,jan.kowalski@example.com,Initech,PROGRAMISTA,7500
+Anna,Nowak,anna.nowak@example.com,Initrode,STAZYSTA,3000
+Marek,Zalewski,m.zalewski@example.com,Initech,MANAGER,16000
+Ewa,Wójcik,ewa.wojcik@example.com,Initrode,PROGRAMISTA,9000
+Piotr,Źrebak,piotr.zrebak@example.com,Initrode,MANAGER,12000
