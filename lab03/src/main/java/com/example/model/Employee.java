@@ -9,6 +9,10 @@ public class Employee {
     private Position position;
     private double salary;
 
+    private EmploymentStatus status = EmploymentStatus.ACTIVE;
+    private String photoFileName;
+
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     public Employee(String fullName, String email, String companyName, Position position, double salary) {
         if (email == null || email.isBlank()) {
             throw new IllegalArgumentException("Email must be provided");
@@ -57,6 +61,18 @@ public class Employee {
         this.salary = salary;
     }
 
+    public EmploymentStatus getStatus() { return status; }
+    public void setStatus(EmploymentStatus status) { this.status = status == null ? EmploymentStatus.ACTIVE : status; }
+
+    // NEW: photo file name (e.g. "john.doe@example.com.jpg")
+    public String getPhotoFileName() {
+        return photoFileName;
+    }
+
+    public void setPhotoFileName(String photoFileName) {
+        this.photoFileName = photoFileName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -78,6 +94,8 @@ public class Employee {
                 ", companyName='" + companyName + '\'' +
                 ", position=" + position +
                 ", salary=" + salary +
+                ", status=" + status +
+                ", photoFileName='" + photoFileName + '\'' +
                 '}';
     }
 }

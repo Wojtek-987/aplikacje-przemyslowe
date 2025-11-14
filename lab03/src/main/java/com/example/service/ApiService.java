@@ -4,6 +4,9 @@ import com.example.exception.ApiException;
 import com.example.model.Employee;
 import com.example.model.Position;
 import com.google.gson.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,33 +16,44 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class ApiService {
 
-    private static final String API_URL = "https://jsonplaceholder.typicode.com/users";
     private final HttpClient client;
+    private final Gson gson;
+    private final String apiUrl;
 
-    // Default constructor uses a real client
-    public ApiService() {
-        this(HttpClient.newHttpClient());
+    /** Constructor used by Spring (explicitly marked to disambiguate). */
+    @Autowired
+    public ApiService(HttpClient client,
+                      Gson gson,
+                      @Value("${app.api.url}") String apiUrl) {
+        this.client = client;
+        this.gson = gson;
+        this.apiUrl = apiUrl;
     }
 
-    // Testable constructor
-    public ApiService(HttpClient client) {
+    /** Test-only convenience constructor (not used by Spring). */
+    public ApiService(HttpClient client, Gson gson, String apiUrl, boolean forTests) {
         this.client = client;
+        this.gson = gson;
+        this.apiUrl = apiUrl;
     }
 
     public List<Employee> fetchEmployeesFromApi() throws ApiException {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(API_URL))
+                .uri(URI.create(apiUrl))
                 .GET()
                 .build();
 
         final HttpResponse<String> resp;
         try {
             resp = client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
+        } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
-            throw new ApiException("HTTP transport error", e);
+            throw new ApiException("HTTP transport interrupted", ie);
+        } catch (IOException ioe) {
+            throw new ApiException("HTTP transport error", ioe);
         }
 
         if (resp.statusCode() < 200 || resp.statusCode() >= 300) {
@@ -47,10 +61,8 @@ public class ApiService {
         }
 
         try {
-            Gson gson = new Gson();
             JsonArray arr = gson.fromJson(resp.body(), JsonArray.class);
             List<Employee> list = new ArrayList<>();
-
             for (JsonElement el : arr) {
                 JsonObject o = el.getAsJsonObject();
                 String fullName = getString(o, "name");

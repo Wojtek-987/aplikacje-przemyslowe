@@ -16,6 +16,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+import com.google.gson.Gson;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -49,7 +50,7 @@ class ApiServiceTest {
         when(response.statusCode()).thenReturn(200);
         when(response.body()).thenReturn(json);
 
-        ApiService svc = new ApiService(client);
+        ApiService svc = new ApiService(client, new Gson(), "https://jsonplaceholder.typicode.com/users", true);
 
         // When
         List<Employee> employees = svc.fetchEmployeesFromApi();
@@ -86,7 +87,7 @@ class ApiServiceTest {
 
         when(response.statusCode()).thenReturn(status);
 
-        ApiService svc = new ApiService(client);
+        ApiService svc = new ApiService(client, new Gson(), "https://jsonplaceholder.typicode.com/users", true);
 
         ApiException ex = assertThrows(ApiException.class, svc::fetchEmployeesFromApi);
         assertTrue(ex.getMessage().contains("HTTP error: " + status));
@@ -107,7 +108,7 @@ class ApiServiceTest {
         when(response.statusCode()).thenReturn(200);
         when(response.body()).thenReturn(notAnArray);
 
-        ApiService svc = new ApiService(client);
+        ApiService svc = new ApiService(client, new Gson(), "https://jsonplaceholder.typicode.com/users", true);
 
         ApiException ex = assertThrows(ApiException.class, svc::fetchEmployeesFromApi);
         assertTrue(ex.getMessage().contains("Failed to parse API payload"));

@@ -6,12 +6,14 @@ import com.example.model.ImportSummary;
 import com.example.model.Position;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
+import org.springframework.stereotype.Service;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class ImportService {
 
     private final EmployeeService directory;
@@ -87,4 +89,15 @@ public class ImportService {
         String fullName = (firstName + " " + lastName).trim();
         return new Employee(fullName, email, company, position, salary);
     }
+
+    public ImportSummary importFromXml(String filePath) {
+        int imported = 0;
+        List<String> errors = new ArrayList<>();
+
+        // Placeholder implementation for now – real XML parsing can be added later.
+        errors.add("XML import is not implemented yet for file: " + filePath);
+
+        return new ImportSummary(imported, errors);
+    }
+
 }

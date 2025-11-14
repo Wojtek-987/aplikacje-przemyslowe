@@ -1,75 +1,91 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.5</version>
+        <relativePath/>
+    </parent>
 
     <groupId>com.example</groupId>
     <artifactId>lab02</artifactId>
     <version>1.0.0</version>
+    <name>lab02</name>
+    <description>Spring Boot migration of lab02</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <!-- Compiler -->
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <!-- Java level (Boot uses this) -->
+        <java.version>21</java.version>
 
-        <!-- Testing & tooling versions -->
-        <junit.jupiter.version>5.14.1</junit.jupiter.version>
-        <mockito.jupiter.version>5.20.0</mockito.jupiter.version>
+        <!-- Keep your existing tooling versions -->
         <surefire.version>3.5.4</surefire.version>
         <jacoco.version>0.8.14</jacoco.version>
     </properties>
 
     <dependencies>
-        <!-- JUnit Jupiter -->
+        <!-- Core Spring Boot (logging, autoconfig, graceful shutdown, etc.) -->
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>${junit.jupiter.version}</version>
-            <scope>test</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
-        <!-- Mockito (JUnit 5 integration) -->
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-            <version>${mockito.jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- AssertJ -->
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>3.26.3</version>
-            <scope>test</scope>
-        </dependency>
-
-
-        <!-- Json and CSV Dependencies -->
+        <!-- Your existing JSON/CSV libs (pinned to the versions you’re using today) -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.10.1</version>
         </dependency>
-
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>5.8</version>
         </dependency>
+
+        <!-- Unified test stack: JUnit Jupiter, Mockito, AssertJ, Spring Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- REST & JSON over HTTP -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- PDF generation (used for company statistics reports) -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>2.0.30</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- JUnit Platform + modern Surefire -->
+            <!-- Spring Boot packaging & run -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- Adjust if your main class differs -->
+                    <mainClass>com.example.EmployeeManagementApplication</mainClass>
+                </configuration>
+            </plugin>
+
+            <!-- Keep your modern Surefire setup -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -79,7 +95,7 @@
                 </configuration>
             </plugin>
 
-            <!-- JaCoCo coverage -->
+            <!-- Keep your JaCoCo coverage workflow -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>

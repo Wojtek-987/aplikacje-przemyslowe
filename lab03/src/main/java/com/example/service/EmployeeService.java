@@ -3,10 +3,12 @@ package com.example.service;
 import com.example.model.CompanyStatistics;
 import com.example.model.Employee;
 import com.example.model.Position;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Service
 public class EmployeeService {
 
     private final Map<String, Employee> byEmail = new LinkedHashMap<>();
@@ -115,4 +117,30 @@ public class EmployeeService {
         String t = c.trim();
         return t.isEmpty() ? "(unknown)" : t;
     }
+
+    // Find a single employee by email
+    public Optional<Employee> findByEmail(String email) {
+        if (email == null || email.isBlank()) return Optional.empty();
+        return Optional.ofNullable(byEmail.get(email));
+    }
+
+    // Remove by email; returns true if something was removed
+    public boolean removeByEmail(String email) {
+        if (email == null || email.isBlank()) return false;
+        return byEmail.remove(email) != null;
+    }
+
+    public List<Employee> findByStatus(com.example.model.EmploymentStatus status) {
+        if (status == null) return List.of();
+        return byEmail.values().stream()
+                .filter(e -> status.equals(e.getStatus()))
+                .collect(Collectors.toList());
+    }
+
+    // Count distribution by status
+    public Map<com.example.model.EmploymentStatus, Long> countByStatus() {
+        return byEmail.values().stream()
+                .collect(Collectors.groupingBy(Employee::getStatus, Collectors.counting()));
+    }
+
 }

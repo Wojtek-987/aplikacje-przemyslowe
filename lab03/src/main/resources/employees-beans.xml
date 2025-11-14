@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           https://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/util
+           https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean id="employee1" class="com.example.model.Employee">
+        <constructor-arg index="0" type="java.lang.String" value="Jan Kowalski"/>
+        <constructor-arg index="1" type="java.lang.String" value="jan.kowalski@techcorp.com"/>
+        <constructor-arg index="2" type="java.lang.String" value="TechCorp"/>
+        <constructor-arg index="3" type="com.example.model.Position" value="MANAGER"/>
+        <constructor-arg index="4" type="double" value="12500"/>
+    </bean>
+
+    <bean id="employee2" class="com.example.model.Employee">
+        <constructor-arg index="0" type="java.lang.String" value="Anna Nowak"/>
+        <constructor-arg index="1" type="java.lang.String" value="anna.nowak@techcorp.com"/>
+        <constructor-arg index="2" type="java.lang.String" value="TechCorp"/>
+        <constructor-arg index="3" type="com.example.model.Position" value="PROGRAMISTA"/>
+        <constructor-arg index="4" type="double" value="8500"/>
+    </bean>
+
+    <util:list id="xmlEmployees" value-type="com.example.model.Employee">
+        <ref bean="employee1"/>
+        <ref bean="employee2"/>
+    </util:list>
+</beans>
